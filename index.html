@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Japonais Complet</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; padding: 15px; color: #fff; }
+        .container { max-width: 500px; margin: auto; }
+
+        h1 { text-align: center; color: #ff6b6b; font-size: 1.4rem; margin-bottom: 15px; }
+
+        .tabs { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 15px; justify-content: center; }
+        .tab { background: #2d3436; color: #dfe6e9; border: none; padding: 8px 12px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
+        .tab.active { background: #ff6b6b; color: white; }
+        .tab:hover { transform: scale(1.05); }
+
+        .quiz-box { background: #2d3436; border-radius: 20px; padding: 25px 15px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+
+        #question { font-size: 4rem; font-weight: bold; color: #ffeaa7; margin: 20px 0; min-height: 1.2em; }
+        #hint { font-size: 0.85rem; color: #b2bec3; margin-bottom: 20px; min-height: 1.5em; }
+
+        .input-group { margin: 15px 0; }
+        input[type="text"] { width: 85%; padding: 14px; border-radius: 30px; border: 2px solid #636e72; background: #1a1a2e; color: #fff; font-size: 1.1rem; text-align: center; outline: none; }
+        input[type="text"]:focus { border-color: #ff6b6b; }
+
+        .btn { border: none; padding: 12px 25px; border-radius: 30px; font-size: 1rem; cursor: pointer; margin: 5px; font-weight: bold; transition: all 0.2s; }
+        .btn:hover { transform: scale(1.05); }
+        .btn-check { background: #ff6b6b; color: white; width: 85%; }
+        .btn-next { background: #00b894; color: white; display: none; width: 85%; }
+        .btn-reveal { background: #6c5ce7; color: white; }
+
+        #feedback { margin: 20px 0; font-size: 1.2rem; min-height: 2em; }
+        .correct { color: #00b894; }
+        .wrong { color: #ff7675; }
+
+        .score-board { display: flex; justify-content: space-around; margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 15px; }
+        .score-item { text-align: center; }
+        .score-number { font-size: 1.5rem; font-weight: bold; color: #ffeaa7; }
+        .score-label { font-size: 0.75rem; color: #b2bec3; }
+
+        .progress-bar { height: 6px; background: #636e72; border-radius: 3px; margin-top: 15px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #ff6b6b, #ffeaa7); transition: width 0.3s; }
+
+        .mode-toggle { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .mode-btn { background: #2d3436; color: #dfe6e9; border: 2px solid #636e72; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; }
+        .mode-btn.active { border-color: #ff6b6b; color: #ff6b6b; }
+
+        .info-card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; margin-top: 20px; }
+        .info-card h3 { color: #ffeaa7; font-size: 1rem; margin-bottom: 10px; }
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .info-item { background: rgba(255,255,255,0.05); padding: 8px; border-radius: 10px; text-align: center; }
+        .info-char { font-size: 1.5rem; color: #ffeaa7; }
+        .info-reading { font-size: 0.75rem; color: #b2bec3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quiz Japonais</h1>
+
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="setMode('quiz')">Quiz</button>
+            <button class="mode-btn" onclick="setMode('flashcard')">Flashcards</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="setCategory('hiragana')">Hiragana</button>
+            <button class="tab" onclick="setCategory('katakana')">Katakana</button>
+            <button class="tab" onclick="setCategory('kanji')">Kanji</button>
+            <button class="tab" onclick="setCategory('vocab')">Vocabulaire</button>
+            <button class="tab" onclick="setCategory('all')">Tout</button>
+        </div>
+
+        <div class="quiz-box">
+            <div id="question">あ</div>
+            <div id="hint"></div>
+
+            <div class="input-group" id="input-area">
+                <input type="text" id="user-input" placeholder="Ta reponse..." autocomplete="off">
+            </div>
+
+            <button class="btn btn-check" id="btn-check" onclick="checkAnswer()">Verifier</button>
+            <button class="btn btn-reveal" id="btn-reveal" onclick="revealAnswer()" style="display:none;">Reveler</button>
+            <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Suivant</button>
+
+            <div id="feedback"></div>
+
+            <div class="score-board">
+                <div class="score-item">
+                    <div class="score-number" id="correct-count">0</div>
+                    <div class="score-label">Correct</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-number" id="total-count">0</div>
+                    <div class="score-label">Total</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-number" id="percentage">0%</div>
+                    <div class="score-label">Score</div>
+                </div>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="info-card" id="info-card" style="display:none;">
+            <h3>Rappel</h3>
+            <div class="info-grid" id="info-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+            hiragana: [
+                // Voyelles
+                { q: "あ", a: ["a"], h: "Voyelle A" },
+                { q: "い", a: ["i"], h: "Voyelle I" },
+                { q: "う", a: ["u"], h: "Voyelle U" },
+                { q: "え", a: ["e"], h: "Voyelle E" },
+                { q: "お", a: ["o"], h: "Voyelle O" },
+                // Famille K
+                { q: "か", a: ["ka"], h: "Famille K" },
+                { q: "き", a: ["ki"], h: "Famille K" },
+                { q: "く", a: ["ku"], h: "Famille K - bec de coucou" },
+                { q: "け", a: ["ke"], h: "Famille K" },
+                { q: "こ", a: ["ko"], h: "Famille K" },
+                // Famille S
+                { q: "さ", a: ["sa"], h: "Famille S" },
+                { q: "し", a: ["shi"], h: "Famille S - hamecon" },
+                { q: "す", a: ["su"], h: "Famille S" },
+                { q: "せ", a: ["se"], h: "Famille S" },
+                { q: "そ", a: ["so"], h: "Famille S" },
+                // Famille T
+                { q: "た", a: ["ta"], h: "Famille T" },
+                { q: "ち", a: ["chi"], h: "Famille T - ressemble au 5" },
+                { q: "つ", a: ["tsu"], h: "Famille T - tsunami" },
+                { q: "て", a: ["te"], h: "Famille T - plateau/main" },
+                { q: "と", a: ["to"], h: "Famille T" },
+                // Famille N
+                { q: "な", a: ["na"], h: "Famille N - croix" },
+                { q: "に", a: ["ni"], h: "Famille N - chiffre 2" },
+                { q: "ぬ", a: ["nu"], h: "Famille N - nouille avec boucle" },
+                { q: "ね", a: ["ne"], h: "Famille N - noeud/chat" },
+                { q: "の", a: ["no"], h: "Famille N - panneau interdit" },
+                // Famille H
+                { q: "は", a: ["ha"], h: "Famille H - H avec boucle" },
+                { q: "ひ", a: ["hi"], h: "Famille H - sourire" },
+                { q: "ふ", a: ["fu", "hu"], h: "Famille H - Mont Fuji" },
+                { q: "へ", a: ["he"], h: "Famille H - pente" },
+                { q: "ほ", a: ["ho"], h: "Famille H - ha + barre" },
+                // Famille M
+                { q: "ま", a: ["ma"], h: "Famille M - mat de bateau" },
+                { q: "み", a: ["mi"], h: "Famille M - chiffre 2 avec boucle" },
+                { q: "む", a: ["mu"], h: "Famille M - mufle de vache" },
+                { q: "め", a: ["me"], h: "Famille M - oeil sans boucle" },
+                { q: "も", a: ["mo"], h: "Famille M - crochet" },
+                // Famille Y
+                { q: "や", a: ["ya"], h: "Famille Y" },
+                { q: "ゆ", a: ["yu"], h: "Famille Y" },
+                { q: "よ", a: ["yo"], h: "Famille Y" },
+                // Famille R
+                { q: "ら", a: ["ra"], h: "Famille R" },
+                { q: "り", a: ["ri"], h: "Famille R - deux traits" },
+                { q: "る", a: ["ru"], h: "Famille R - roue avec boucle" },
+                { q: "れ", a: ["re"], h: "Famille R - pointe exterieure" },
+                { q: "ろ", a: ["ro"], h: "Famille R - comme 3 sans boucle" },
+                // Famille W + N
+                { q: "わ", a: ["wa"], h: "Vague vers l'interieur" },
+                { q: "を", a: ["wo", "o"], h: "Particule (prononce o)" },
+                { q: "ん", a: ["n"], h: "Consonne seule" },
+                // Dakuten G
+                { q: "が", a: ["ga"], h: "Ka + dakuten" },
+                { q: "ぎ", a: ["gi"], h: "Ki + dakuten" },
+                { q: "ぐ", a: ["gu"], h: "Ku + dakuten" },
+                { q: "げ", a: ["ge"], h: "Ke + dakuten" },
+                { q: "ご", a: ["go"], h: "Ko + dakuten" },
+                // Dakuten Z
+                { q: "ざ", a: ["za"], h: "Sa + dakuten" },
+                { q: "じ", a: ["ji"], h: "Shi + dakuten" },
+                { q: "ず", a: ["zu"], h: "Su + dakuten" },
+                { q: "ぜ", a: ["ze"], h: "Se + dakuten" },
+                { q: "ぞ", a: ["zo"], h: "So + dakuten" },
+                // Dakuten D
+                { q: "だ", a: ["da"], h: "Ta + dakuten" },
+                { q: "ぢ", a: ["ji", "di"], h: "Chi + dakuten (rare)" },
+                { q: "づ", a: ["zu", "du"], h: "Tsu + dakuten (rare)" },
+                { q: "で", a: ["de"], h: "Te + dakuten" },
+                { q: "ど", a: ["do"], h: "To + dakuten" },
+                // Dakuten B
+                { q: "ば", a: ["ba"], h: "Ha + dakuten" },
+                { q: "び", a: ["bi"], h: "Hi + dakuten" },
+                { q: "ぶ", a: ["bu"], h: "Fu + dakuten" },
+                { q: "べ", a: ["be"], h: "He + dakuten" },
+                { q: "ぼ", a: ["bo"], h: "Ho + dakuten" },
+                // Handakuten P
+                { q: "ぱ", a: ["pa"], h: "Ha + handakuten (rond)" },
+                { q: "ぴ", a: ["pi"], h: "Hi + handakuten (rond)" },
+                { q: "ぷ", a: ["pu"], h: "Fu + handakuten (rond)" },
+                { q: "ぺ", a: ["pe"], h: "He + handakuten (rond)" },
+                { q: "ぽ", a: ["po"], h: "Ho + handakuten (rond)" }
+            ],
+            katakana: [
+                // Voyelles
+                { q: "ア", a: ["a"], h: "Voyelle A - angle" },
+                { q: "イ", a: ["i"], h: "Voyelle I - personne inclinee" },
+                { q: "ウ", a: ["u"], h: "Voyelle U - urne" },
+                { q: "エ", a: ["e"], h: "Voyelle E - tour Eiffel" },
+                { q: "オ", a: ["o"], h: "Voyelle O - objet avec bras" },
+                // Famille K
+                { q: "カ", a: ["ka"], h: "Famille K" },
+                { q: "キ", a: ["ki"], h: "Famille K - cle" },
+                { q: "ク", a: ["ku"], h: "Famille K - crochet" },
+                { q: "ケ", a: ["ke"], h: "Famille K" },
+                { q: "コ", a: ["ko"], h: "Famille K - coin de coffre" },
+                // Famille S
+                { q: "サ", a: ["sa"], h: "Famille S" },
+                { q: "シ", a: ["shi"], h: "Famille S - sourire vers le haut" },
+                { q: "ス", a: ["su"], h: "Famille S" },
+                { q: "セ", a: ["se"], h: "Famille S" },
+                { q: "ソ", a: ["so"], h: "Famille S" },
+                // Famille T
+                { q: "タ", a: ["ta"], h: "Famille T" },
+                { q: "チ", a: ["chi"], h: "Famille T" },
+                { q: "ツ", a: ["tsu"], h: "Famille T - tsunami vers le bas" },
+                { q: "テ", a: ["te"], h: "Famille T" },
+                { q: "ト", a: ["to"], h: "Famille T" },
+                // Famille N
+                { q: "ナ", a: ["na"], h: "Famille N" },
+                { q: "ニ", a: ["ni"], h: "Famille N - chiffre 2" },
+                { q: "ヌ", a: ["nu"], h: "Famille N" },
+                { q: "ネ", a: ["ne"], h: "Famille N" },
+                { q: "ノ", a: ["no"], h: "Famille N - trait oblique" },
+                // Famille H
+                { q: "ハ", a: ["ha"], h: "Famille H" },
+                { q: "ヒ", a: ["hi"], h: "Famille H" },
+                { q: "フ", a: ["fu", "hu"], h: "Famille H" },
+                { q: "ヘ", a: ["he"], h: "Famille H - pente" },
+                { q: "ホ", a: ["ho"], h: "Famille H" },
+                // Famille M
+                { q: "マ", a: ["ma"], h: "Famille M" },
+                { q: "ミ", a: ["mi"], h: "Famille M - trois traits" },
+                { q: "ム", a: ["mu"], h: "Famille M" },
+                { q: "メ", a: ["me"], h: "Famille M" },
+                { q: "モ", a: ["mo"], h: "Famille M" },
+                // Famille Y
+                { q: "ヤ", a: ["ya"], h: "Famille Y" },
+                { q: "ユ", a: ["yu"], h: "Famille Y" },
+                { q: "ヨ", a: ["yo"], h: "Famille Y" },
+                // Famille R
+                { q: "ラ", a: ["ra"], h: "Famille R" },
+                { q: "リ", a: ["ri"], h: "Famille R" },
+                { q: "ル", a: ["ru"], h: "Famille R" },
+                { q: "レ", a: ["re"], h: "Famille R" },
+                { q: "ロ", a: ["ro"], h: "Famille R - carre" },
+                // Famille W + N
+                { q: "ワ", a: ["wa"], h: "W" },
+                { q: "ヲ", a: ["wo", "o"], h: "Particule" },
+                { q: "ン", a: ["n"], h: "Consonne seule" },
+                // Dakuten
+                { q: "ガ", a: ["ga"], h: "Ka + dakuten" },
+                { q: "ギ", a: ["gi"], h: "Ki + dakuten" },
+                { q: "グ", a: ["gu"], h: "Ku + dakuten" },
+                { q: "ゲ", a: ["ge"], h: "Ke + dakuten" },
+                { q: "ゴ", a: ["go"], h: "Ko + dakuten" },
+                { q: "ザ", a: ["za"], h: "Sa + dakuten" },
+                { q: "ジ", a: ["ji"], h: "Shi + dakuten" },
+                { q: "ズ", a: ["zu"], h: "Su + dakuten" },
+                { q: "ゼ", a: ["ze"], h: "Se + dakuten" },
+                { q: "ゾ", a: ["zo"], h: "So + dakuten" },
+                { q: "ダ", a: ["da"], h: "Ta + dakuten" },
+                { q: "デ", a: ["de"], h: "Te + dakuten" },
+                { q: "ド", a: ["do"], h: "To + dakuten" },
+                { q: "バ", a: ["ba"], h: "Ha + dakuten" },
+                { q: "ビ", a: ["bi"], h: "Hi + dakuten" },
+                { q: "ブ", a: ["bu"], h: "Fu + dakuten" },
+                { q: "ベ", a: ["be"], h: "He + dakuten" },
+                { q: "ボ", a: ["bo"], h: "Ho + dakuten" },
+                { q: "パ", a: ["pa"], h: "Ha + handakuten" },
+                { q: "ピ", a: ["pi"], h: "Hi + handakuten" },
+                { q: "プ", a: ["pu"], h: "Fu + handakuten" },
+                { q: "ペ", a: ["pe"], h: "He + handakuten" },
+                { q: "ポ", a: ["po"], h: "Ho + handakuten" }
+            ],
+            kanji: [
+                // Directions
+                { q: "入口", a: ["entree", "iriguchi", "iri guchi"], h: "Direction - Ou l'on entre" },
+                { q: "出口", a: ["sortie", "deguchi", "de guchi"], h: "Direction - Ou l'on sort" },
+                { q: "左", a: ["gauche", "hidari"], h: "Direction" },
+                { q: "右", a: ["droite", "migi"], h: "Direction - bouche en bas" },
+                { q: "上", a: ["haut", "ue", "nobori"], h: "Direction - trait en haut" },
+                { q: "下", a: ["bas", "shita", "kudari"], h: "Direction - trait en bas" },
+                // Lieux
+                { q: "駅", a: ["gare", "eki"], h: "Lieu - relais de chevaux" },
+                { q: "トイレ", a: ["toilettes", "toire"], h: "Lieu" },
+                // Chiffres
+                { q: "一", a: ["1", "un", "ichi"], h: "Chiffre - un trait" },
+                { q: "二", a: ["2", "deux", "ni"], h: "Chiffre - deux traits" },
+                { q: "三", a: ["3", "trois", "san"], h: "Chiffre - trois traits" },
+                { q: "四", a: ["4", "quatre", "shi", "yon"], h: "Chiffre" },
+                { q: "五", a: ["5", "cinq", "go"], h: "Chiffre" },
+                { q: "八", a: ["8", "huit", "hachi"], h: "Chiffre - montagne ouverte" },
+                { q: "九", a: ["9", "neuf", "kyu", "ku"], h: "Chiffre" },
+                { q: "十", a: ["10", "dix", "ju", "juu"], h: "Chiffre - croix" },
+                { q: "百", a: ["100", "cent", "hyaku"], h: "Unite - boite avec trait" },
+                // Temps
+                { q: "円", a: ["yen", "yens", "en"], h: "Monnaie - portail" },
+                { q: "時", a: ["heure", "ji"], h: "Temps - soleil a gauche" },
+                { q: "分", a: ["minute", "fun", "pun"], h: "Temps" },
+                { q: "年", a: ["annee", "an", "nen"], h: "Temps" },
+                { q: "月", a: ["mois", "lune", "gatsu", "tsuki"], h: "Temps - lune" },
+                { q: "日", a: ["jour", "soleil", "nichi", "hi"], h: "Temps - soleil" },
+                // Nourriture
+                { q: "水", a: ["eau", "mizu"], h: "Nourriture - eclaboussures" },
+                { q: "肉", a: ["viande", "niku"], h: "Nourriture - stries" },
+                { q: "魚", a: ["poisson", "sakana"], h: "Nourriture - ecailles" },
+                // Personnes
+                { q: "人", a: ["personne", "hito", "jin"], h: "Personne qui marche" },
+                { q: "私", a: ["je", "moi", "watashi"], h: "Pronom personnel" }
+            ],
+            vocab: [
+                // Mots hiragana
+                { q: "すし", a: ["sushi"], h: "Nourriture japonaise" },
+                { q: "さけ", a: ["sake"], h: "Boisson ou poisson" },
+                { q: "くつ", a: ["kutsu", "chaussures"], h: "Vetement - pieds" },
+                { q: "とけい", a: ["tokei", "montre", "horloge"], h: "Objet - temps" },
+                { q: "ちかてつ", a: ["chikatetsu", "metro"], h: "Transport" },
+                { q: "いぬ", a: ["inu", "chien"], h: "Animal" },
+                { q: "ねこ", a: ["neko", "chat"], h: "Animal" },
+                { q: "さかな", a: ["sakana", "poisson"], h: "Animal/Nourriture" },
+                { q: "はな", a: ["hana", "fleur", "nez"], h: "Nature ou corps" },
+                { q: "ひと", a: ["hito", "personne"], h: "Personne" },
+                { q: "ふね", a: ["fune", "bateau"], h: "Transport" },
+                { q: "なまえ", a: ["namae", "nom"], h: "Identite" },
+                { q: "みず", a: ["mizu", "eau"], h: "Boisson" },
+                { q: "くるま", a: ["kuruma", "voiture"], h: "Transport" },
+                { q: "さよなら", a: ["sayonara", "au revoir"], h: "Salutation" },
+                { q: "おはよう", a: ["ohayo", "ohayou", "bonjour"], h: "Salutation - matin" },
+                { q: "ごはん", a: ["gohan", "riz", "repas"], h: "Nourriture" },
+                { q: "てがみ", a: ["tegami", "lettre"], h: "Communication" },
+                { q: "がっこう", a: ["gakkou", "gakko", "ecole"], h: "Lieu" },
+                { q: "びょういん", a: ["byouin", "byoin", "hopital"], h: "Lieu" },
+                { q: "きって", a: ["kitte", "timbre"], h: "Petit tsu - double t" },
+                { q: "にっぽん", a: ["nippon", "japon"], h: "Pays - petit tsu" },
+                { q: "やった", a: ["yatta", "gagne", "reussi"], h: "Expression" },
+                { q: "おちゃ", a: ["ocha", "the"], h: "Boisson - son combine" },
+                { q: "きょう", a: ["kyo", "kyou", "aujourd'hui"], h: "Temps - son combine" },
+                // Mots katakana
+                { q: "パリ", a: ["paris", "pari"], h: "Ville - France" },
+                { q: "アジア", a: ["asia", "ajia", "asie"], h: "Continent" },
+                { q: "ラーメン", a: ["ramen", "raamen"], h: "Nourriture" },
+                { q: "ギョーザ", a: ["gyoza", "gyouza", "raviolis"], h: "Nourriture" },
+                { q: "カナダ", a: ["canada", "kanada"], h: "Pays" },
+                { q: "ケニア", a: ["kenya", "kenia"], h: "Pays" },
+                { q: "サッカー", a: ["soccer", "sakka", "football"], h: "Sport - petit tsu" },
+                { q: "フランス", a: ["france", "furansu"], h: "Pays" },
+                // Phrases
+                { q: "ください", a: ["kudasai", "s'il vous plait", "svp"], h: "Politesse - demande" },
+                { q: "いくらですか", a: ["ikura desu ka", "combien"], h: "Question - prix" },
+                { q: "よろしくおねがいします", a: ["yoroshiku onegai shimasu", "enchante"], h: "Politesse - presentation" },
+                { q: "げんきですか", a: ["genki desu ka", "ca va"], h: "Question - sante" },
+                { q: "げんきです", a: ["genki desu", "je vais bien"], h: "Reponse - sante" }
+            ]
+        };
+
+        let currentCategory = 'hiragana';
+        let currentMode = 'quiz';
+        let currentIndex = 0;
+        let correctCount = 0;
+        let totalCount = 0;
+        let currentPool = [];
+        let answered = false;
+
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            resetQuiz();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (mode === 'flashcard') {
+                document.getElementById('input-area').style.display = 'none';
+                document.getElementById('btn-check').style.display = 'none';
+                document.getElementById('btn-reveal').style.display = 'inline-block';
+            } else {
+                document.getElementById('input-area').style.display = 'block';
+                document.getElementById('btn-check').style.display = 'inline-block';
+                document.getElementById('btn-reveal').style.display = 'none';
+            }
+            resetQuiz();
+        }
+
+        function resetQuiz() {
+            if (currentCategory === 'all') {
+                currentPool = shuffle([...data.hiragana, ...data.katakana, ...data.kanji, ...data.vocab]);
+            } else {
+                currentPool = shuffle([...data[currentCategory]]);
+            }
+            currentIndex = 0;
+            correctCount = 0;
+            totalCount = 0;
+            answered = false;
+            updateDisplay();
+            updateScore();
+        }
+
+        function updateDisplay() {
+            const item = currentPool[currentIndex];
+            document.getElementById('question').textContent = item.q;
+            document.getElementById('hint').textContent = item.h || '';
+            document.getElementById('user-input').value = '';
+            document.getElementById('feedback').innerHTML = '';
+            document.getElementById('btn-next').style.display = 'none';
+            answered = false;
+
+            if (currentMode === 'quiz') {
+                document.getElementById('btn-check').style.display = 'inline-block';
+            }
+        }
+
+        function normalize(str) {
+            return str.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]/g, '')
+                .trim();
+        }
+
+        function checkAnswer() {
+            if (answered) return;
+
+            const userAns = normalize(document.getElementById('user-input').value);
+            const item = currentPool[currentIndex];
+            const correct = item.a.some(ans => normalize(ans) === userAns);
+
+            totalCount++;
+            answered = true;
+
+            if (correct) {
+                correctCount++;
+                document.getElementById('feedback').innerHTML = '<span class="correct">Bravo !</span>';
+            } else {
+                document.getElementById('feedback').innerHTML = `<span class="wrong">Dommage !</span><br><small>Reponse: ${item.a[0]}</small>`;
+            }
+
+            document.getElementById('btn-check').style.display = 'none';
+            document.getElementById('btn-next').style.display = 'inline-block';
+            updateScore();
+        }
+
+        function revealAnswer() {
+            const item = currentPool[currentIndex];
+            document.getElementById('feedback').innerHTML = `<span style="color:#ffeaa7;">${item.a[0]}</span>`;
+            document.getElementById('btn-next').style.display = 'inline-block';
+            totalCount++;
+            answered = true;
+            updateScore();
+        }
+
+        function nextQuestion() {
+            currentIndex = (currentIndex + 1) % currentPool.length;
+            if (currentIndex === 0) {
+                currentPool = shuffle(currentPool);
+            }
+            updateDisplay();
+
+            if (currentMode === 'flashcard') {
+                document.getElementById('btn-reveal').style.display = 'inline-block';
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('total-count').textContent = totalCount;
+            const pct = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+            document.getElementById('percentage').textContent = pct + '%';
+            document.getElementById('progress').style.width = pct + '%';
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (!answered) {
+                    checkAnswer();
+                } else {
+                    nextQuestion();
+                }
+            }
+        });
+
+        // Initialisation
+        resetQuiz();
+    </script>
+</body>
+</html>
