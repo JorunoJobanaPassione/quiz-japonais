@@ -271,12 +271,204 @@
             transition: width 0.3s;
             border-radius: 2px;
         }
+
+        .question-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 1.5rem 0 0.25rem;
+        }
+
+        .question-row #question {
+            margin: 0;
+        }
+
+        .tts-btn {
+            background: var(--bg-hover);
+            border: none;
+            color: var(--text-muted);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tts-btn:hover, .tts-btn:active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tts-btn svg {
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        .mastery-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .mastery-dots {
+            display: inline-flex;
+            gap: 3px;
+        }
+
+        .mastery-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--bg-hover);
+        }
+
+        .mastery-dot.filled {
+            background: var(--accent);
+        }
+
+        .mastery-dot.mastered {
+            background: var(--success);
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .stats-btn {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border: none;
+            padding: 0.4rem 0.7rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stats-btn:hover, .stats-btn:active {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 460px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid .stat-card {
+            background: var(--bg);
+        }
+
+        .stats-section-title {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .weak-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.8rem;
+            background: var(--bg);
+            border-radius: 0.5rem;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .weak-card .wc-q {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .weak-card .wc-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .weak-card .wc-meta .wc-fail {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-actions .btn {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: var(--error);
+            border: 2px solid var(--error);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Quiz Japonais</h1>
+            <div class="header-row">
+                <h1>Quiz Japonais</h1>
+                <button class="stats-btn" onclick="openStats()">Stats</button>
+            </div>
         </div>
 
         <div class="mode-toggle">
@@ -288,12 +480,23 @@
             <button class="tab active" onclick="setCategory('hiragana')">Hiragana</button>
             <button class="tab" onclick="setCategory('katakana')">Katakana</button>
             <button class="tab" onclick="setCategory('kanji')">Kanji</button>
-            <button class="tab" onclick="setCategory('vocab')">Vocabulaire</button>
+            <button class="tab" onclick="setCategory('panneaux')">Panneaux</button>
+            <button class="tab" onclick="setCategory('voyage')">Voyage</button>
+            <button class="tab" onclick="setCategory('vocab')">Vocab</button>
             <button class="tab" onclick="setCategory('all')">Tout</button>
         </div>
 
         <div class="quiz-box">
-            <div id="question">あ</div>
+            <div class="question-row">
+                <div id="question">あ</div>
+                <button class="tts-btn" id="btn-tts" onclick="speakCurrent()" aria-label="Ecouter">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                </button>
+            </div>
+            <div class="mastery-badge" id="mastery-badge">
+                <span id="mastery-label">Nouveau</span>
+                <span class="mastery-dots" id="mastery-dots"></span>
+            </div>
             <div id="hint"></div>
 
             <div class="input-group" id="input-area">
@@ -323,6 +526,17 @@
 
             <div class="progress-bar">
                 <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="stats-modal" class="modal" style="display:none;" onclick="closeStatsBackdrop(event)">
+        <div class="modal-content">
+            <h2>Ma progression</h2>
+            <div id="stats-content"></div>
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="resetProgress()">Reset progression</button>
+                <button class="btn btn-check" onclick="closeStats()">Fermer</button>
             </div>
         </div>
     </div>
@@ -474,34 +688,214 @@
                 { q: "ポ", a: ["po"], h: "Ho + handakuten" }
             ],
             kanji: [
-                { q: "入口", a: ["entree", "iriguchi", "iri guchi"], h: "Direction - Ou l'on entre" },
-                { q: "出口", a: ["sortie", "deguchi", "de guchi"], h: "Direction - Ou l'on sort" },
-                { q: "左", a: ["gauche", "hidari"], h: "Direction" },
-                { q: "右", a: ["droite", "migi"], h: "Direction - bouche en bas" },
-                { q: "上", a: ["haut", "ue", "nobori"], h: "Direction - trait en haut" },
-                { q: "下", a: ["bas", "shita", "kudari"], h: "Direction - trait en bas" },
-                { q: "駅", a: ["gare", "eki"], h: "Lieu - relais de chevaux" },
-                { q: "トイレ", a: ["toilettes", "toire"], h: "Lieu" },
                 { q: "一", a: ["1", "un", "ichi"], h: "Chiffre - un trait" },
                 { q: "二", a: ["2", "deux", "ni"], h: "Chiffre - deux traits" },
                 { q: "三", a: ["3", "trois", "san"], h: "Chiffre - trois traits" },
                 { q: "四", a: ["4", "quatre", "shi", "yon"], h: "Chiffre" },
                 { q: "五", a: ["5", "cinq", "go"], h: "Chiffre" },
+                { q: "六", a: ["6", "six", "roku"], h: "Chiffre" },
+                { q: "七", a: ["7", "sept", "shichi", "nana"], h: "Chiffre" },
                 { q: "八", a: ["8", "huit", "hachi"], h: "Chiffre - montagne ouverte" },
-                { q: "九", a: ["9", "neuf", "kyu", "ku"], h: "Chiffre" },
+                { q: "九", a: ["9", "neuf", "kyu", "kyuu", "ku"], h: "Chiffre" },
                 { q: "十", a: ["10", "dix", "ju", "juu"], h: "Chiffre - croix" },
-                { q: "百", a: ["100", "cent", "hyaku"], h: "Unite - boite avec trait" },
-                { q: "円", a: ["yen", "yens", "en"], h: "Monnaie - portail" },
-                { q: "時", a: ["heure", "ji"], h: "Temps - soleil a gauche" },
-                { q: "分", a: ["minute", "fun", "pun"], h: "Temps" },
-                { q: "年", a: ["annee", "an", "nen"], h: "Temps" },
-                { q: "月", a: ["mois", "lune", "gatsu", "tsuki"], h: "Temps - lune" },
+                { q: "百", a: ["100", "cent", "hyaku"], h: "Centaine" },
+                { q: "千", a: ["1000", "mille", "sen"], h: "Millier" },
+                { q: "万", a: ["10000", "dix mille", "man"], h: "Dix mille" },
+                { q: "円", a: ["yen", "yens", "en", "rond"], h: "Monnaie japonaise" },
                 { q: "日", a: ["jour", "soleil", "nichi", "hi"], h: "Temps - soleil" },
-                { q: "水", a: ["eau", "mizu"], h: "Nourriture - eclaboussures" },
-                { q: "肉", a: ["viande", "niku"], h: "Nourriture - stries" },
-                { q: "魚", a: ["poisson", "sakana"], h: "Nourriture - ecailles" },
-                { q: "人", a: ["personne", "hito", "jin"], h: "Personne qui marche" },
-                { q: "私", a: ["je", "moi", "watashi"], h: "Pronom personnel" }
+                { q: "月", a: ["mois", "lune", "gatsu", "getsu", "tsuki"], h: "Temps - lune / lundi" },
+                { q: "火", a: ["feu", "ka", "hi"], h: "Flammes / mardi" },
+                { q: "水", a: ["eau", "sui", "mizu"], h: "Eclaboussures / mercredi" },
+                { q: "木", a: ["arbre", "bois", "moku", "ki"], h: "Arbre avec branches / jeudi" },
+                { q: "金", a: ["or", "argent", "kin", "kane"], h: "Metal precieux / vendredi" },
+                { q: "土", a: ["terre", "sol", "do", "tsuchi"], h: "Terre / samedi" },
+                { q: "年", a: ["annee", "an", "nen", "toshi"], h: "Annee" },
+                { q: "時", a: ["heure", "temps", "ji", "toki"], h: "Soleil + temple" },
+                { q: "分", a: ["minute", "fun", "pun", "bun"], h: "Diviser" },
+                { q: "人", a: ["personne", "hito", "jin", "nin"], h: "Deux jambes qui marchent" },
+                { q: "男", a: ["homme", "otoko", "dan"], h: "Force dans la riziere" },
+                { q: "女", a: ["femme", "onna", "jo"], h: "Personne assise" },
+                { q: "子", a: ["enfant", "ko", "shi"], h: "Bebe avec bras tendus" },
+                { q: "父", a: ["pere", "chichi", "fu"], h: "Famille - pere" },
+                { q: "母", a: ["mere", "haha", "bo"], h: "Famille - mere" },
+                { q: "友", a: ["ami", "tomo", "yuu"], h: "Main qui aide" },
+                { q: "私", a: ["je", "moi", "watashi", "shi"], h: "Pronom personnel" },
+                { q: "口", a: ["bouche", "kuchi", "kou"], h: "Bouche ouverte" },
+                { q: "目", a: ["oeil", "yeux", "me", "moku"], h: "Oeil vertical" },
+                { q: "耳", a: ["oreille", "mimi", "ji"], h: "Oreille" },
+                { q: "手", a: ["main", "te", "shu"], h: "Cinq doigts" },
+                { q: "足", a: ["pied", "jambe", "ashi", "soku"], h: "Genou + pied" },
+                { q: "上", a: ["haut", "dessus", "ue", "jou"], h: "Trait vers le haut" },
+                { q: "下", a: ["bas", "dessous", "shita", "ka"], h: "Trait vers le bas" },
+                { q: "中", a: ["milieu", "dedans", "interieur", "naka", "chuu"], h: "Fleche au centre" },
+                { q: "左", a: ["gauche", "hidari", "sa"], h: "Main + travail" },
+                { q: "右", a: ["droite", "migi", "yuu", "u"], h: "Main + bouche" },
+                { q: "前", a: ["avant", "devant", "mae", "zen"], h: "Devant" },
+                { q: "後", a: ["apres", "derriere", "ato", "ushiro", "go"], h: "Derriere" },
+                { q: "外", a: ["exterieur", "dehors", "soto", "gai"], h: "Hors de" },
+                { q: "東", a: ["est", "higashi", "tou"], h: "Soleil derriere arbre - Est" },
+                { q: "西", a: ["ouest", "nishi", "sei"], h: "Ou se couche le soleil" },
+                { q: "南", a: ["sud", "minami", "nan"], h: "Sud" },
+                { q: "北", a: ["nord", "kita", "hoku"], h: "Deux personnes dos a dos" },
+                { q: "山", a: ["montagne", "yama", "san"], h: "Trois pics" },
+                { q: "川", a: ["riviere", "kawa", "sen"], h: "Trois courants" },
+                { q: "天", a: ["ciel", "ten"], h: "Au-dessus de tout" },
+                { q: "雨", a: ["pluie", "ame", "u"], h: "Gouttes qui tombent" },
+                { q: "駅", a: ["gare", "station", "eki"], h: "Lieu - relais de chevaux" },
+                { q: "車", a: ["voiture", "kuruma", "sha"], h: "Char vu de haut" },
+                { q: "道", a: ["route", "chemin", "michi", "dou"], h: "Route" },
+                { q: "電", a: ["electricite", "den"], h: "Pluie + eclair" },
+                { q: "学", a: ["etude", "apprendre", "gaku"], h: "Etude" },
+                { q: "校", a: ["ecole", "kou"], h: "Ecole - suffixe" },
+                { q: "先", a: ["avant", "precedent", "saki", "sen"], h: "En avant - sensei" },
+                { q: "生", a: ["vie", "naitre", "sei", "shou"], h: "Pousse qui germe" },
+                { q: "本", a: ["livre", "origine", "hon", "moto"], h: "Arbre avec racines" },
+                { q: "大", a: ["grand", "dai", "tai", "ookii"], h: "Personne bras ecartes" },
+                { q: "小", a: ["petit", "shou", "chiisai"], h: "Trois petits traits" },
+                { q: "高", a: ["haut", "cher", "takai", "kou"], h: "Tour haute" },
+                { q: "安", a: ["pas cher", "bon marche", "yasui", "an"], h: "Femme sous toit - paisible" },
+                { q: "新", a: ["nouveau", "atarashii", "shin"], h: "Nouveau" },
+                { q: "古", a: ["vieux", "ancien", "furui", "ko"], h: "Dix bouches - heritage" },
+                { q: "長", a: ["long", "chef", "nagai", "chou"], h: "Long cheveu" },
+                { q: "白", a: ["blanc", "shiro", "shiroi", "haku"], h: "Soleil avec rayon" },
+                { q: "行", a: ["aller", "iku", "kou", "gyou"], h: "Carrefour - aller" },
+                { q: "来", a: ["venir", "kuru", "rai"], h: "Ble qui pousse" },
+                { q: "食", a: ["manger", "repas", "taberu", "shoku"], h: "Bol de nourriture" },
+                { q: "飲", a: ["boire", "nomu", "in"], h: "Manger + bouche ouverte" },
+                { q: "見", a: ["voir", "regarder", "miru", "ken"], h: "Oeil sur deux jambes" },
+                { q: "聞", a: ["entendre", "ecouter", "kiku", "bun"], h: "Oreille a la porte" },
+                { q: "読", a: ["lire", "yomu", "doku"], h: "Mots + vendre" },
+                { q: "書", a: ["ecrire", "kaku", "sho"], h: "Pinceau qui ecrit" },
+                { q: "出", a: ["sortir", "deru", "shutsu"], h: "Pousse hors de la terre" },
+                { q: "入", a: ["entrer", "hairu", "nyuu"], h: "Entrer sous le toit" },
+                { q: "話", a: ["parler", "histoire", "hanasu", "hanashi", "wa"], h: "Mots + langue" }
+            ],
+            panneaux: [
+                { q: "入口", a: ["entree", "iriguchi"], h: "Panneau - ou l'on entre" },
+                { q: "出口", a: ["sortie", "deguchi"], h: "Panneau - ou l'on sort" },
+                { q: "非常口", a: ["sortie de secours", "hijouguchi"], h: "Panneau - urgence" },
+                { q: "トイレ", a: ["toilettes", "toire"], h: "Lieu" },
+                { q: "お手洗い", a: ["toilettes", "otearai"], h: "Toilettes - poli" },
+                { q: "男", a: ["homme", "otoko"], h: "Toilettes hommes" },
+                { q: "女", a: ["femme", "onna"], h: "Toilettes femmes" },
+                { q: "大人", a: ["adulte", "otona"], h: "Tarif" },
+                { q: "子供", a: ["enfant", "kodomo"], h: "Tarif" },
+                { q: "駅", a: ["gare", "station", "eki"], h: "Transport" },
+                { q: "改札", a: ["portique", "kaisatsu"], h: "Gare - barriere" },
+                { q: "切符", a: ["ticket", "billet", "kippu"], h: "Transport" },
+                { q: "地下鉄", a: ["metro", "chikatetsu"], h: "Transport" },
+                { q: "押す", a: ["pousser", "osu"], h: "Porte" },
+                { q: "引く", a: ["tirer", "hiku"], h: "Porte" },
+                { q: "営業中", a: ["ouvert", "eigyouchuu"], h: "Magasin - ouvert" },
+                { q: "準備中", a: ["en preparation", "ferme", "junbichuu"], h: "Magasin - pas encore ouvert" },
+                { q: "閉店", a: ["ferme", "heiten"], h: "Magasin - ferme" },
+                { q: "開店", a: ["ouvert", "ouverture", "kaiten"], h: "Magasin - ouverture" },
+                { q: "禁煙", a: ["non fumeur", "kin'en", "kinen"], h: "Interdiction" },
+                { q: "喫煙", a: ["fumeur", "kitsuen"], h: "Zone fumeur" },
+                { q: "危険", a: ["danger", "kiken"], h: "Avertissement" },
+                { q: "注意", a: ["attention", "chuui"], h: "Avertissement" },
+                { q: "立入禁止", a: ["interdit d'entrer", "tachiiri kinshi"], h: "Interdiction" },
+                { q: "工事中", a: ["travaux", "koujichuu"], h: "Chantier" },
+                { q: "案内", a: ["information", "guide", "annai"], h: "Comptoir d'info" },
+                { q: "受付", a: ["reception", "uketsuke"], h: "Accueil" },
+                { q: "無料", a: ["gratuit", "muryou"], h: "Prix" },
+                { q: "有料", a: ["payant", "yuuryou"], h: "Prix" },
+                { q: "本日休業", a: ["ferme aujourd'hui", "honjitsu kyuugyou"], h: "Magasin" },
+                { q: "食堂", a: ["cantine", "restaurant", "shokudou"], h: "Lieu - manger" },
+                { q: "両替", a: ["change", "ryougae"], h: "Banque - devises" },
+                { q: "コンビニ", a: ["superette", "konbini"], h: "Magasin 24h/24" }
+            ],
+            voyage: [
+                { q: "こんにちは", a: ["bonjour", "konnichiwa"], h: "Salutation - journee" },
+                { q: "おはようございます", a: ["bonjour matin", "ohayou gozaimasu", "ohayougozaimasu"], h: "Salutation - matin poli" },
+                { q: "こんばんは", a: ["bonsoir", "konbanwa"], h: "Salutation - soir" },
+                { q: "おやすみなさい", a: ["bonne nuit", "oyasumi nasai", "oyasuminasai"], h: "Salutation - coucher" },
+                { q: "さようなら", a: ["au revoir", "sayounara", "sayonara"], h: "Salutation - depart" },
+                { q: "またね", a: ["a bientot", "mata ne", "matane"], h: "Au revoir - amical" },
+                { q: "ありがとうございます", a: ["merci", "arigatou gozaimasu", "arigatougozaimasu"], h: "Merci - poli" },
+                { q: "ありがとう", a: ["merci", "arigatou", "arigato"], h: "Merci - amical" },
+                { q: "どうも", a: ["merci", "doumo", "domo"], h: "Merci - court" },
+                { q: "どういたしまして", a: ["de rien", "dou itashimashite", "douitashimashite"], h: "Reponse a merci" },
+                { q: "すみません", a: ["pardon", "excusez-moi", "sumimasen"], h: "Politesse - tout terrain" },
+                { q: "ごめんなさい", a: ["desole", "gomen nasai", "gomennasai"], h: "Excuse" },
+                { q: "はい", a: ["oui", "hai"], h: "Affirmation" },
+                { q: "いいえ", a: ["non", "iie"], h: "Negation" },
+                { q: "お願いします", a: ["s'il vous plait", "svp", "onegai shimasu", "onegaishimasu"], h: "Demande polie" },
+                { q: "大丈夫", a: ["ca va", "ok", "daijoubu", "daijobu"], h: "Tout va bien" },
+                { q: "わかりました", a: ["compris", "wakarimashita"], h: "J'ai compris" },
+                { q: "わかりません", a: ["je ne comprends pas", "wakarimasen"], h: "Je n'ai pas compris" },
+                { q: "知りません", a: ["je ne sais pas", "shirimasen"], h: "Pas au courant" },
+                { q: "はじめまして", a: ["enchante", "hajimemashite"], h: "Premiere rencontre" },
+                { q: "よろしくおねがいします", a: ["enchante", "yoroshiku onegai shimasu"], h: "Apres presentation" },
+                { q: "お名前は", a: ["votre nom", "onamae wa"], h: "Question - nom" },
+                { q: "私はマックスです", a: ["je suis max", "watashi wa max desu"], h: "Se presenter" },
+                { q: "フランス人です", a: ["je suis francais", "furansujin desu"], h: "Nationalite" },
+                { q: "日本語が少しわかります", a: ["je comprends un peu le japonais", "nihongo ga sukoshi wakarimasu"], h: "Niveau de langue" },
+                { q: "英語が話せますか", a: ["parlez-vous anglais", "eigo ga hanasemasu ka"], h: "Question - langue" },
+                { q: "ゆっくりお願いします", a: ["lentement svp", "yukkuri onegai shimasu"], h: "Demander de ralentir" },
+                { q: "もう一度", a: ["encore une fois", "mou ichido"], h: "Repeter" },
+                { q: "メニュー", a: ["menu", "menyuu"], h: "Restaurant" },
+                { q: "お水", a: ["eau", "omizu"], h: "Boisson" },
+                { q: "お茶", a: ["the", "ocha"], h: "Boisson" },
+                { q: "コーヒー", a: ["cafe", "koohii", "kohi"], h: "Boisson" },
+                { q: "ビール", a: ["biere", "biiru", "biru"], h: "Boisson" },
+                { q: "これをください", a: ["ceci svp", "kore wo kudasai", "kore o kudasai"], h: "Commander" },
+                { q: "おすすめは何ですか", a: ["que recommandez-vous", "osusume wa nan desu ka"], h: "Recommandation" },
+                { q: "いただきます", a: ["bon appetit", "itadakimasu"], h: "Avant de manger" },
+                { q: "ごちそうさま", a: ["merci pour le repas", "gochisousama"], h: "Apres avoir mange" },
+                { q: "おいしい", a: ["delicieux", "oishii"], h: "Compliment - nourriture" },
+                { q: "辛い", a: ["epice", "karai"], h: "Gout" },
+                { q: "甘い", a: ["sucre", "amai"], h: "Gout" },
+                { q: "肉", a: ["viande", "niku"], h: "Nourriture" },
+                { q: "魚", a: ["poisson", "sakana"], h: "Nourriture" },
+                { q: "野菜", a: ["legumes", "yasai"], h: "Nourriture" },
+                { q: "ご飯", a: ["riz", "repas", "gohan"], h: "Nourriture" },
+                { q: "お会計お願いします", a: ["l'addition svp", "okaikei onegai shimasu"], h: "Restaurant - addition" },
+                { q: "いくらですか", a: ["combien ca coute", "ikura desu ka"], h: "Prix" },
+                { q: "高いです", a: ["c'est cher", "takai desu"], h: "Prix - reaction" },
+                { q: "安いです", a: ["c'est pas cher", "yasui desu"], h: "Prix - reaction" },
+                { q: "カードで", a: ["par carte", "kaado de", "kado de"], h: "Paiement" },
+                { q: "現金", a: ["especes", "cash", "genkin"], h: "Paiement" },
+                { q: "レシート", a: ["ticket de caisse", "reshiito", "reshito"], h: "Apres achat" },
+                { q: "袋", a: ["sac", "fukuro"], h: "Achat" },
+                { q: "電車", a: ["train", "densha"], h: "Transport" },
+                { q: "バス", a: ["bus", "basu"], h: "Transport" },
+                { q: "タクシー", a: ["taxi", "takushii", "takushi"], h: "Transport" },
+                { q: "空港", a: ["aeroport", "kuukou", "kuko"], h: "Voyage" },
+                { q: "東京駅まで", a: ["jusqu'a la gare de tokyo", "toukyou eki made", "tokyo eki made"], h: "Destination" },
+                { q: "どこですか", a: ["ou est", "doko desu ka"], h: "Direction" },
+                { q: "ここはどこですか", a: ["ou suis-je", "koko wa doko desu ka"], h: "Perdu" },
+                { q: "右に", a: ["a droite", "migi ni"], h: "Direction" },
+                { q: "左に", a: ["a gauche", "hidari ni"], h: "Direction" },
+                { q: "まっすぐ", a: ["tout droit", "massugu"], h: "Direction" },
+                { q: "近い", a: ["proche", "chikai"], h: "Distance" },
+                { q: "遠い", a: ["loin", "tooi", "toi"], h: "Distance" },
+                { q: "ホテル", a: ["hotel", "hoteru"], h: "Hebergement" },
+                { q: "部屋", a: ["chambre", "piece", "heya"], h: "Hotel" },
+                { q: "鍵", a: ["cle", "kagi"], h: "Hotel" },
+                { q: "予約", a: ["reservation", "yoyaku"], h: "Hotel" },
+                { q: "Wi-Fiのパスワード", a: ["mot de passe wifi", "wi-fi no pasuwaado"], h: "Hotel / cafe" },
+                { q: "助けて", a: ["au secours", "tasukete"], h: "Urgence" },
+                { q: "病院", a: ["hopital", "byouin", "byoin"], h: "Sante" },
+                { q: "薬", a: ["medicament", "kusuri"], h: "Sante" },
+                { q: "痛い", a: ["douleur", "ca fait mal", "itai"], h: "Sante" },
+                { q: "警察", a: ["police", "keisatsu"], h: "Urgence" },
+                { q: "救急車", a: ["ambulance", "kyuukyuusha"], h: "Urgence" },
+                { q: "大使館", a: ["ambassade", "taishikan"], h: "Urgence" },
+                { q: "パスポート", a: ["passeport", "pasupooto", "pasuporto"], h: "Voyage" },
+                { q: "なくしました", a: ["j'ai perdu", "nakushimashita"], h: "Probleme" },
+                { q: "写真をとってもいいですか", a: ["puis-je prendre une photo", "shashin wo totte mo ii desu ka"], h: "Demander permission" },
+                { q: "トイレはどこですか", a: ["ou sont les toilettes", "toire wa doko desu ka"], h: "Question - lieu" },
+                { q: "今何時ですか", a: ["quelle heure est-il", "ima nan ji desu ka"], h: "Question - heure" },
+                { q: "明日", a: ["demain", "ashita"], h: "Temps" },
+                { q: "今日", a: ["aujourd'hui", "kyou", "kyo"], h: "Temps" },
+                { q: "昨日", a: ["hier", "kinou", "kino"], h: "Temps" },
+                { q: "朝", a: ["matin", "asa"], h: "Temps" },
+                { q: "昼", a: ["midi", "journee", "hiru"], h: "Temps" },
+                { q: "夜", a: ["soir", "nuit", "yoru"], h: "Temps" },
+                { q: "楽しい", a: ["amusant", "agreable", "tanoshii"], h: "Sentiment" },
+                { q: "きれい", a: ["beau", "joli", "kirei"], h: "Compliment" },
+                { q: "すごい", a: ["incroyable", "super", "sugoi"], h: "Admiration" }
             ],
             vocab: [
                 { q: "すし", a: ["sushi"], h: "Nourriture japonaise" },
@@ -545,21 +939,90 @@
             ]
         };
 
+        const SRS_KEY = 'kanjiQuizSRS_v1';
+
         let currentCategory = 'hiragana';
         let currentMode = 'quiz';
-        let currentIndex = 0;
+        let currentCard = null;
         let correctCount = 0;
         let totalCount = 0;
         let currentPool = [];
         let answered = false;
+        let jaVoice = null;
 
-        function shuffle(array) {
-            const arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
+        function loadSRS() {
+            try { return JSON.parse(localStorage.getItem(SRS_KEY)) || {}; }
+            catch { return {}; }
+        }
+
+        function saveSRS(data) {
+            try { localStorage.setItem(SRS_KEY, JSON.stringify(data)); } catch {}
+        }
+
+        function getCardState(key) {
+            const data = loadSRS();
+            return data[key] || { score: 0, seen: 0, correct: 0 };
+        }
+
+        function updateCardState(key, correct) {
+            const data = loadSRS();
+            const cur = data[key] || { score: 0, seen: 0, correct: 0 };
+            cur.seen += 1;
+            if (correct) {
+                cur.correct += 1;
+                cur.score = Math.min(5, cur.score + 1);
+            } else {
+                cur.score = Math.max(0, cur.score - 2);
             }
-            return arr;
+            cur.lastSeen = Date.now();
+            data[key] = cur;
+            saveSRS(data);
+        }
+
+        function pickWeighted(pool, exclude) {
+            const weights = pool.map(c => {
+                if (c === exclude) return 0;
+                const s = getCardState(c.q).score;
+                return Math.max(1, 6 - s);
+            });
+            const total = weights.reduce((a, b) => a + b, 0);
+            if (total === 0) return pool[Math.floor(Math.random() * pool.length)];
+            let r = Math.random() * total;
+            for (let i = 0; i < pool.length; i++) {
+                r -= weights[i];
+                if (r <= 0) return pool[i];
+            }
+            return pool[pool.length - 1];
+        }
+
+        function initTTS() {
+            if (!('speechSynthesis' in window)) return;
+            const setVoice = () => {
+                const voices = speechSynthesis.getVoices();
+                jaVoice = voices.find(v => v.lang === 'ja-JP')
+                    || voices.find(v => v.lang && v.lang.startsWith('ja'))
+                    || null;
+            };
+            setVoice();
+            if (typeof speechSynthesis.onvoiceschanged !== 'undefined') {
+                speechSynthesis.onvoiceschanged = setVoice;
+            }
+        }
+
+        function speak(text) {
+            if (!('speechSynthesis' in window) || !text) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'ja-JP';
+                if (jaVoice) u.voice = jaVoice;
+                u.rate = 0.85;
+                speechSynthesis.speak(u);
+            } catch {}
+        }
+
+        function speakCurrent() {
+            if (currentCard) speak(currentCard.q);
         }
 
         function setCategory(cat) {
@@ -588,29 +1051,56 @@
 
         function resetQuiz() {
             if (currentCategory === 'all') {
-                currentPool = shuffle([...data.hiragana, ...data.katakana, ...data.kanji, ...data.vocab]);
+                currentPool = [
+                    ...data.hiragana, ...data.katakana, ...data.kanji,
+                    ...data.panneaux, ...data.voyage, ...data.vocab
+                ];
             } else {
-                currentPool = shuffle([...data[currentCategory]]);
+                currentPool = [...data[currentCategory]];
             }
-            currentIndex = 0;
+            currentCard = null;
             correctCount = 0;
             totalCount = 0;
             answered = false;
-            updateDisplay();
+            nextQuestion();
             updateScore();
         }
 
+        function renderMastery(card) {
+            const state = getCardState(card.q);
+            const score = state.score || 0;
+            const labelEl = document.getElementById('mastery-label');
+            const dotsEl = document.getElementById('mastery-dots');
+
+            let label;
+            if (state.seen === 0) label = 'Nouveau';
+            else if (score >= 5) label = 'Maitrise';
+            else if (score >= 3) label = 'Appris';
+            else if (score >= 1) label = 'En cours';
+            else label = 'A revoir';
+            labelEl.textContent = label;
+
+            let dots = '';
+            for (let i = 0; i < 5; i++) {
+                const cls = i < score ? (score >= 5 ? 'mastered' : 'filled') : '';
+                dots += '<span class="mastery-dot ' + cls + '"></span>';
+            }
+            dotsEl.innerHTML = dots;
+        }
+
         function updateDisplay() {
-            const item = currentPool[currentIndex];
+            const item = currentCard;
             document.getElementById('question').textContent = item.q;
             document.getElementById('hint').textContent = item.h || '';
             document.getElementById('user-input').value = '';
             document.getElementById('feedback').innerHTML = '';
             document.getElementById('btn-next').style.display = 'none';
             answered = false;
+            renderMastery(item);
 
             if (currentMode === 'quiz') {
                 document.getElementById('btn-check').style.display = 'block';
+                document.getElementById('user-input').focus();
             }
         }
 
@@ -626,38 +1116,44 @@
             if (answered) return;
 
             const userAns = normalize(document.getElementById('user-input').value);
-            const item = currentPool[currentIndex];
+            if (!userAns) return;
+            const item = currentCard;
             const correct = item.a.some(ans => normalize(ans) === userAns);
 
             totalCount++;
             answered = true;
+            updateCardState(item.q, correct);
 
             if (correct) {
                 correctCount++;
                 document.getElementById('feedback').innerHTML = '<span class="correct">Bravo !</span>';
+                speak(item.q);
             } else {
                 document.getElementById('feedback').innerHTML = '<span class="wrong">Dommage !</span><br><small>Reponse: ' + item.a[0] + '</small>';
+                speak(item.q);
             }
 
+            renderMastery(item);
             document.getElementById('btn-check').style.display = 'none';
             document.getElementById('btn-next').style.display = 'block';
             updateScore();
         }
 
         function revealAnswer() {
-            const item = currentPool[currentIndex];
+            const item = currentCard;
             document.getElementById('feedback').innerHTML = '<span style="color:var(--accent);">' + item.a[0] + '</span>';
             document.getElementById('btn-next').style.display = 'block';
             totalCount++;
             answered = true;
+            updateCardState(item.q, false);
+            renderMastery(item);
+            speak(item.q);
             updateScore();
         }
 
         function nextQuestion() {
-            currentIndex = (currentIndex + 1) % currentPool.length;
-            if (currentIndex === 0) {
-                currentPool = shuffle(currentPool);
-            }
+            const next = pickWeighted(currentPool, currentCard);
+            currentCard = next;
             updateDisplay();
 
             if (currentMode === 'flashcard') {
@@ -683,6 +1179,75 @@
             }
         });
 
+        function getAllCards() {
+            return [
+                ...data.hiragana, ...data.katakana, ...data.kanji,
+                ...data.panneaux, ...data.voyage, ...data.vocab
+            ];
+        }
+
+        function openStats() {
+            const srs = loadSRS();
+            const all = getAllCards();
+            const seen = all.filter(c => srs[c.q] && srs[c.q].seen > 0);
+            const mastered = seen.filter(c => (srs[c.q].score || 0) >= 5);
+            let totalSeen = 0, totalCorrect = 0;
+            seen.forEach(c => { totalSeen += srs[c.q].seen; totalCorrect += srs[c.q].correct || 0; });
+            const acc = totalSeen > 0 ? Math.round(totalCorrect / totalSeen * 100) : 0;
+
+            const weak = seen
+                .map(c => ({ card: c, state: srs[c.q] }))
+                .filter(x => x.state.seen >= 2)
+                .sort((a, b) => {
+                    const ra = (a.state.correct || 0) / a.state.seen;
+                    const rb = (b.state.correct || 0) / b.state.seen;
+                    if (ra !== rb) return ra - rb;
+                    return b.state.seen - a.state.seen;
+                })
+                .slice(0, 8);
+
+            let html = '<div class="stats-grid">';
+            html += '<div class="stat-card"><div class="stat-value">' + seen.length + '</div><div class="stat-label">Cartes vues</div></div>';
+            html += '<div class="stat-card"><div class="stat-value">' + mastered.length + '</div><div class="stat-label">Maitrisees</div></div>';
+            html += '<div class="stat-card"><div class="stat-value">' + totalSeen + '</div><div class="stat-label">Reponses totales</div></div>';
+            html += '<div class="stat-card"><div class="stat-value accent">' + acc + '%</div><div class="stat-label">Precision</div></div>';
+            html += '</div>';
+
+            if (weak.length > 0) {
+                html += '<div class="stats-section-title">Tes points faibles</div>';
+                weak.forEach(({ card, state }) => {
+                    const fails = state.seen - (state.correct || 0);
+                    const rate = Math.round((state.correct || 0) / state.seen * 100);
+                    html += '<div class="weak-card">';
+                    html += '<span class="wc-q">' + card.q + '</span>';
+                    html += '<span class="wc-meta">' + (card.a[0] || '') + ' &middot; <span class="wc-fail">' + fails + ' rate(s)</span> / ' + state.seen + ' &middot; ' + rate + '%</span>';
+                    html += '</div>';
+                });
+            } else {
+                html += '<div class="stats-section-title">Tes points faibles</div>';
+                html += '<div class="weak-card"><span class="wc-meta">Pas encore assez de donnees. Reponds a quelques cartes.</span></div>';
+            }
+
+            document.getElementById('stats-content').innerHTML = html;
+            document.getElementById('stats-modal').style.display = 'flex';
+        }
+
+        function closeStats() {
+            document.getElementById('stats-modal').style.display = 'none';
+        }
+
+        function closeStatsBackdrop(e) {
+            if (e.target.id === 'stats-modal') closeStats();
+        }
+
+        function resetProgress() {
+            if (!confirm('Effacer toute la progression SRS ? Cette action est irreversible.')) return;
+            try { localStorage.removeItem(SRS_KEY); } catch {}
+            closeStats();
+            resetQuiz();
+        }
+
+        initTTS();
         resetQuiz();
     </script>
 </body>
