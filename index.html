@@ -483,6 +483,7 @@
             <button class="tab" onclick="setCategory('panneaux')">Panneaux</button>
             <button class="tab" onclick="setCategory('voyage')">Voyage</button>
             <button class="tab" onclick="setCategory('minna')">Minna</button>
+            <button class="tab" onclick="setCategory('minnaKanji')">Kanji Minna</button>
             <button class="tab" onclick="setCategory('vocab')">Vocab</button>
             <button class="tab" onclick="setCategory('all')">Tout</button>
         </div>
@@ -1097,6 +1098,109 @@
                 { q: "どうして", a: ["doushite", "pourquoi"], h: "Minna L9 - Goûts et préférences" },
                 { q: "だから", a: ["dakara", "c'est pourquoi"], h: "Minna L9 - Goûts et préférences" }
             ],
+            minnaKanji: [
+                { q: "日", a: ["jour", "soleil", "nichi", "hi"], h: "Minna L1 · 日曜日はやすみです" },
+                { q: "月", a: ["mois", "lune", "getsu", "gatsu", "tsuki"], h: "Minna L1 · きょうは月曜日です" },
+                { q: "火", a: ["feu", "ka", "hi"], h: "Minna L1 · あしたは火曜日です" },
+                { q: "水", a: ["eau", "sui", "mizu"], h: "Minna L1 · あさっては水曜日です" },
+                { q: "木", a: ["arbre", "bois", "moku", "ki"], h: "Minna L1 · 木曜日はたんじょうびです" },
+                { q: "金", a: ["or", "argent", "kin", "kane"], h: "Minna L1 · 月曜日から金曜日まで" },
+                { q: "土", a: ["terre", "sol", "do", "tsuchi"], h: "Minna L1 · 土曜日のあさ" },
+                { q: "山", a: ["montagne", "yama", "san"], h: "Minna L1 · わたしは山田です" },
+                { q: "川", a: ["riviere", "kawa", "sen"], h: "Minna L1 · 中川さんのともだち" },
+                { q: "田", a: ["riziere", "ta", "da"], h: "Minna L1 · 田中さんといきます" },
+                { q: "一", a: ["1", "un", "ichi"], h: "Minna L2 · 一月一日" },
+                { q: "二", a: ["2", "deux", "ni"], h: "Minna L2 · 二日にきょうとへいきました" },
+                { q: "三", a: ["3", "trois", "san"], h: "Minna L2 · 三月三日" },
+                { q: "四", a: ["4", "quatre", "shi", "yon"], h: "Minna L2 · きょうは四月四日です" },
+                { q: "五", a: ["5", "cinq", "go"], h: "Minna L2 · 五日からいきます" },
+                { q: "六", a: ["6", "six", "roku"], h: "Minna L2 · 六日までやすみです" },
+                { q: "七", a: ["7", "sept", "shichi", "nana"], h: "Minna L2 · 七月七日" },
+                { q: "八", a: ["8", "huit", "hachi"], h: "Minna L2 · 八月八日" },
+                { q: "九", a: ["9", "neuf", "kyu", "kyuu", "ku"], h: "Minna L2 · 九千円です" },
+                { q: "十", a: ["10", "dix", "ju", "juu"], h: "Minna L2 · 十日" },
+                { q: "百", a: ["100", "cent", "hyaku"], h: "Minna L2 · これは千九百円です" },
+                { q: "千", a: ["1000", "mille", "sen"], h: "Minna L2 · 千九百円のワイン" },
+                { q: "万", a: ["10000", "dix mille", "man"], h: "Minna L2 · 百万円" },
+                { q: "円", a: ["yen", "yens", "en"], h: "Minna L2 · 五百円" },
+                { q: "学", a: ["etude", "apprendre", "gaku"], h: "Minna L3 · さくら大学の学生" },
+                { q: "生", a: ["vie", "naitre", "etudiant", "sei", "shou"], h: "Minna L3 · さくら大学の先生" },
+                { q: "先", a: ["avant", "precedent", "sen", "saki"], h: "Minna L3 · 先生のうちへいきました" },
+                { q: "会", a: ["rencontrer", "reunion", "kai", "au"], h: "Minna L3 · 山田さんは会社員です" },
+                { q: "社", a: ["compagnie", "entreprise", "sha"], h: "Minna L3 · コンピューターの会社" },
+                { q: "員", a: ["membre", "employe", "in"], h: "Minna L3 · 田中さんは銀行員です" },
+                { q: "医", a: ["medecine", "i"], h: "Minna L3 · わたしは医者です" },
+                { q: "者", a: ["personne", "sha", "mono"], h: "Minna L3 · 医者の本" },
+                { q: "本", a: ["livre", "origine", "hon", "moto"], h: "Minna L3 · わたしの本" },
+                { q: "中", a: ["milieu", "dedans", "interieur", "naka", "chuu"], h: "Minna L3 · 中国人" },
+                { q: "国", a: ["pays", "kuni", "koku"], h: "Minna L3 · お国はどちらですか" },
+                { q: "人", a: ["personne", "hito", "jin", "nin"], h: "Minna L3 · あの人" },
+                { q: "今", a: ["maintenant", "ima", "kon"], h: "Minna L4 · 今朝、４時におきました" },
+                { q: "朝", a: ["matin", "asa", "chou"], h: "Minna L4 · 月曜日の朝" },
+                { q: "昼", a: ["midi", "journee", "hiru", "chuu"], h: "Minna L4 · 火曜日の昼" },
+                { q: "晩", a: ["soir", "ban"], h: "Minna L4 · きのうの晩" },
+                { q: "時", a: ["heure", "temps", "ji", "toki"], h: "Minna L4 · ４時半におきました" },
+                { q: "分", a: ["minute", "fun", "pun", "bun"], h: "Minna L4 · ６時20分" },
+                { q: "半", a: ["demi", "moitie", "han"], h: "Minna L4 · 今、５時半です" },
+                { q: "午", a: ["midi", "go"], h: "Minna L4 · 午前９時" },
+                { q: "前", a: ["avant", "devant", "mae", "zen"], h: "Minna L4 · 午前11時からです" },
+                { q: "後", a: ["apres", "derriere", "ato", "go", "ushiro"], h: "Minna L4 · 午後５時までです" },
+                { q: "休", a: ["repos", "vacances", "yasumi", "kyuu"], h: "Minna L4 · 昼休みにいきます" },
+                { q: "毎", a: ["chaque", "mai"], h: "Minna L4 · 毎週月曜日" },
+                { q: "何", a: ["quoi", "que", "nani", "nan"], h: "Minna L4 · 何月何日ですか" },
+                { q: "行", a: ["aller", "iku", "kou"], h: "Minna L5 · 銀行へ行きます" },
+                { q: "来", a: ["venir", "kuru", "rai"], h: "Minna L5 · 日本へ来ました" },
+                { q: "校", a: ["ecole", "kou"], h: "Minna L5 · 学校へ行きます" },
+                { q: "週", a: ["semaine", "shuu"], h: "Minna L5 · 今週まで休みです" },
+                { q: "去", a: ["partir", "passe", "kyo", "saru"], h: "Minna L5 · 去年、日本へ来ました" },
+                { q: "年", a: ["annee", "an", "nen", "toshi"], h: "Minna L5 · 今年は中国へかえりません" },
+                { q: "駅", a: ["gare", "station", "eki"], h: "Minna L5 · 東京駅" },
+                { q: "電", a: ["electricite", "den"], h: "Minna L5 · 電車で来ます" },
+                { q: "車", a: ["voiture", "kuruma", "sha"], h: "Minna L5 · 山田さんの車" },
+                { q: "自", a: ["soi-meme", "soi", "ji"], h: "Minna L5 · 自転車で学校へ来ます" },
+                { q: "転", a: ["rouler", "tourner", "ten"], h: "Minna L5 · わたしの自転車" },
+                { q: "高", a: ["haut", "cher", "takai", "kou"], h: "Minna L6 · 高い山" },
+                { q: "安", a: ["bon marche", "pas cher", "yasui", "an"], h: "Minna L6 · 安いカメラ" },
+                { q: "大", a: ["grand", "dai", "tai", "ookii"], h: "Minna L6 · 大きい町" },
+                { q: "小", a: ["petit", "shou", "chiisai"], h: "Minna L6 · 小さい大学" },
+                { q: "新", a: ["nouveau", "atarashii", "shin"], h: "Minna L6 · 新しいかばん" },
+                { q: "古", a: ["vieux", "ancien", "furui", "ko"], h: "Minna L6 · 古いうち" },
+                { q: "青", a: ["bleu", "aoi", "sei"], h: "Minna L6 · 青いシャツ" },
+                { q: "白", a: ["blanc", "shiroi", "shiro", "haku"], h: "Minna L6 · 白いねこ" },
+                { q: "赤", a: ["rouge", "akai", "aka", "seki"], h: "Minna L6 · 赤いはな" },
+                { q: "黒", a: ["noir", "kuroi", "kuro", "koku"], h: "Minna L6 · 黒いいぬ" },
+                { q: "上", a: ["haut", "dessus", "ue", "jou"], h: "Minna L7 · 木の上" },
+                { q: "下", a: ["bas", "dessous", "shita", "ka"], h: "Minna L7 · ベッドの下" },
+                { q: "父", a: ["pere", "chichi", "fu"], h: "Minna L7 · 山田さんのお父さん" },
+                { q: "母", a: ["mere", "haha", "bo"], h: "Minna L7 · わたしの母" },
+                { q: "子", a: ["enfant", "ko", "shi"], h: "Minna L7 · 子どもがいます" },
+                { q: "手", a: ["main", "te", "shu"], h: "Minna L7 · りょうりが上手です" },
+                { q: "好", a: ["aimer", "suki", "kou"], h: "Minna L7 · カラオケが好きです" },
+                { q: "主", a: ["principal", "maitre", "shu", "nushi"], h: "Minna L7 · 山田さんのご主人" },
+                { q: "肉", a: ["viande", "niku"], h: "Minna L7 · 肉は好きじゃありません" },
+                { q: "魚", a: ["poisson", "sakana", "gyo"], h: "Minna L7 · 魚が好きです" },
+                { q: "食", a: ["manger", "repas", "taberu", "shoku"], h: "Minna L7 · 食べ物" },
+                { q: "飲", a: ["boire", "nomu", "in"], h: "Minna L7 · 飲み物" },
+                { q: "物", a: ["chose", "objet", "mono", "butsu"], h: "Minna L7 · 好きな物" },
+                { q: "近", a: ["proche", "pres", "chikai", "kin"], h: "Minna L8 · 近くのスーパー" },
+                { q: "間", a: ["intervalle", "entre", "espace", "aida", "kan"], h: "Minna L8 · 本屋と花屋の間" },
+                { q: "右", a: ["droite", "migi", "u", "yuu"], h: "Minna L8 · ドアの右" },
+                { q: "左", a: ["gauche", "hidari", "sa"], h: "Minna L8 · テレビの左" },
+                { q: "外", a: ["exterieur", "dehors", "soto", "gai"], h: "Minna L8 · 部屋の外" },
+                { q: "男", a: ["homme", "otoko", "dan"], h: "Minna L8 · 男の人" },
+                { q: "女", a: ["femme", "onna", "jo"], h: "Minna L8 · 女の子" },
+                { q: "犬", a: ["chien", "inu", "ken"], h: "Minna L8 · 白い犬" },
+                { q: "書", a: ["ecrire", "kaku", "sho"], h: "Minna L9 · 手紙を書きます" },
+                { q: "聞", a: ["ecouter", "entendre", "kiku", "bun"], h: "Minna L9 · ＣＤを聞きます" },
+                { q: "読", a: ["lire", "yomu", "doku"], h: "Minna L9 · 新聞を読みます" },
+                { q: "見", a: ["voir", "regarder", "miru", "ken"], h: "Minna L9 · テレビを見ます" },
+                { q: "話", a: ["parler", "histoire", "hanasu", "hanashi", "wa"], h: "Minna L9 · 電話をかけます" },
+                { q: "買", a: ["acheter", "kau", "bai"], h: "Minna L9 · パンを買います" },
+                { q: "起", a: ["se lever", "okiru", "ki"], h: "Minna L9 · ６時に起きます" },
+                { q: "帰", a: ["rentrer", "retourner", "kaeru", "ki"], h: "Minna L9 · ７時に帰ります" },
+                { q: "友", a: ["ami", "tomo", "yuu"], h: "Minna L9 · 大学の友達" },
+                { q: "達", a: ["pluriel", "atteindre", "tachi", "tatsu"], h: "Minna L9 · 友達に会います" }
+            ],
             vocab: [
                 { q: "すし", a: ["sushi"], h: "Nourriture japonaise" },
                 { q: "さけ", a: ["sake"], h: "Boisson ou poisson" },
@@ -1253,7 +1357,7 @@
             if (currentCategory === 'all') {
                 currentPool = [
                     ...data.hiragana, ...data.katakana, ...data.kanji,
-                    ...data.panneaux, ...data.voyage, ...data.minna, ...data.vocab
+                    ...data.panneaux, ...data.voyage, ...data.minna, ...data.minnaKanji, ...data.vocab
                 ];
             } else {
                 currentPool = [...data[currentCategory]];
@@ -1382,7 +1486,7 @@
         function getAllCards() {
             return [
                 ...data.hiragana, ...data.katakana, ...data.kanji,
-                ...data.panneaux, ...data.voyage, ...data.minna, ...data.vocab
+                ...data.panneaux, ...data.voyage, ...data.minna, ...data.minnaKanji, ...data.vocab
             ];
         }
 
